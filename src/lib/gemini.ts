@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import type { Document } from "@langchain/core/documents";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -44,3 +45,29 @@ export const aiSummariseCommit = async (diff: string) => {
 
   return response.response.text();
 };
+
+export async function summariseCode(doc: Document) {
+  console.log("Summarising code:", doc.metadata.source);
+  const code = doc.pageContent.slice(0, 10000)
+  const response = await model.generateContent([
+    `You are a intelligent senior software engineer who specialises in onboarding junior software engineers onto projects.`,
+    `You are onboarding a junior software engineer and explaining to them the purpose of the ${doc.metadata.fileName} file.`,
+    `Here is the code:
+      ---
+      ${code}
+      ---
+      Give me a summary in no more than 100 words of the code above.`
+  ]);
+console.log("Summary response:", response.response.text());
+  return response.response.text();
+}
+
+export async function generateEmbedding(summary: string) {
+  const model = genAI.getGenerativeModel({
+    model: "models/embedding-001",
+  });
+
+  const result = await model.embedContent(summary)
+  const embedding = result.embedding
+  return embedding.values
+}

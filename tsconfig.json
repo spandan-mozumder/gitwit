@@ -17,9 +17,10 @@
 
     /* Bundled projects */
     "lib": ["dom", "dom.iterable", "ES2022"],
+    "types": ["node"],
     "noEmit": true,
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "bundler",
     "jsx": "preserve",
     "plugins": [{ "name": "next" }],
     "incremental": true,
@@ -36,7 +37,9 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.js",
-    ".next/types/**/*.ts"
+    // ".next/types/**/*.ts",
+    // "src/lib/github.ts"
+    // "src/lib/github-loader.ts"
   ],
   "exclude": ["node_modules"]
 }

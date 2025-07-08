@@ -2,7 +2,6 @@ import "@/styles/globals.css";
 
 import { ClerkProvider } from "@clerk/nextjs";
 
-
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 
@@ -28,7 +27,7 @@ export default function RootLayout({
       <html lang="en" className={`${geist.variable}`}>
         <body>
           <TRPCReactProvider>{children}</TRPCReactProvider>
-          <Toaster richColors/>
+          <Toaster richColors />
         </body>
       </html>
     </ClerkProvider>

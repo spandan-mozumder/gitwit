@@ -46,10 +46,11 @@
     "**/*.ts",
     "**/*.tsx",
     "next-env.d.ts",
-    ".next/types/**/*.ts"
-    // ".next/types/**/*.ts",
+    ".next/types/**/*.ts",
+    ".next/types/**/*.ts",
     // "src/lib/github.ts"
     // "src/lib/github-loader.ts"
+    // "src/lib/gemini.ts",
   ],
   "exclude": [
     "node_modules"

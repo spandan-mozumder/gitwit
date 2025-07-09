@@ -51,7 +51,6 @@ export const pollCommits = async (projectId: string) => {
     projectId,
     commitHashes,
   );
-
   const summaryResponses = await Promise.allSettled(
     unprocessedCommits.map((commit) => {
       return summariseCommit(githubUrl!, commit.commitHash);
@@ -64,7 +63,6 @@ export const pollCommits = async (projectId: string) => {
     }
     return "";
   });
-
   const commits = await db.commit.createMany({
     data: summaries.map((summary, index) => {
       return {
@@ -78,17 +76,16 @@ export const pollCommits = async (projectId: string) => {
       };
     }),
   });
-
   return commits;
 };
 
 async function summariseCommit(githubUrl: string, commitHash: string) {
   const { data } = await axios.get(`${githubUrl}/commit/${commitHash}.diff`, {
     headers: {
-      Accept: "application//vnd.github.v3.diff",
+      Accept: "application/vnd.github.v3.diff",
     },
   });
-  return (await aiSummariseCommit(data)) || "";
+  return (await aiSummariseCommit(data));
 }
 
 async function fetchProjectGithubUrl(projectId: string) {

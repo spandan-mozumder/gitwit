@@ -8,7 +8,6 @@ import Link from "next/link";
 
 const CommitLog = () => {
   const { projectId, project } = useProject();
-
   const { data: commits } = api.project.getCommits.useQuery({ projectId });
 
   return (

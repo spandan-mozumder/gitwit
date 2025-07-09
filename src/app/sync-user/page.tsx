@@ -34,7 +34,6 @@ const SyncUser = async () => {
       lastName: user.lastName,
     },
   });
-  console.log("User synced successfully");
   return redirect("/dashboard");
 };
 

@@ -32,11 +32,8 @@ export const indexGithubRepo = async (
   const docs = await loadGithubRepo(githubUrl, githubToken);
   const allEmbeddings = await generateEmbeddings(docs);
 
-  console.log("🧪 db models available:", Object.keys(db));
-
   await Promise.allSettled(
     allEmbeddings.map(async (embedding, index) => {
-      console.log(`processing ${index} of ${allEmbeddings.length}`);
       if (!embedding) return;
 
       const sourceCodeEmbedding = await db.sourceCodeEmbedding.create({
@@ -60,7 +57,6 @@ export const indexGithubRepo = async (
 const generateEmbeddings = async (docs: Document[]): Promise<any[]> => {
   return await Promise.all(
     docs.map(async (doc) => {
-      console.log(doc)
       const summary = await summariseCode(doc);
       const embedding = await generateEmbedding(summary);
 

@@ -21,6 +21,7 @@ export const loadGithubRepo = async (
     maxConcurrency: 5,
   });
   const docs = await loader.load();
+
   return docs;
 };
 
@@ -49,7 +50,7 @@ export const indexGithubRepo = async (
       UPDATE "SourceCodeEmbedding"
       SET "summaryEmbedding" = ${embedding.embedding}::vector
       WHERE id = ${sourceCodeEmbedding.id}
-      `
+      `;
     }),
   );
 };
@@ -58,6 +59,7 @@ const generateEmbeddings = async (docs: Document[]): Promise<any[]> => {
   return await Promise.all(
     docs.map(async (doc) => {
       const summary = await summariseCode(doc);
+
       const embedding = await generateEmbedding(summary);
 
       return {

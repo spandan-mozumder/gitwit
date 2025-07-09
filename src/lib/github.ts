@@ -51,6 +51,7 @@ export const pollCommits = async (projectId: string) => {
     projectId,
     commitHashes,
   );
+
   const summaryResponses = await Promise.allSettled(
     unprocessedCommits.map((commit) => {
       return summariseCommit(githubUrl!, commit.commitHash);
@@ -63,6 +64,7 @@ export const pollCommits = async (projectId: string) => {
     }
     return "";
   });
+
   const commits = await db.commit.createMany({
     data: summaries.map((summary, index) => {
       return {
@@ -76,6 +78,7 @@ export const pollCommits = async (projectId: string) => {
       };
     }),
   });
+  
   return commits;
 };
 

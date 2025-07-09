@@ -46,17 +46,21 @@ export const aiSummariseCommit = async (diff: string) => {
 };
 
 export async function summariseCode(doc: Document) {
-  const code = doc.pageContent.slice(0, 10000);
-  const response = await model.generateContent([
-    `You are a intelligent senior software engineer who specialises in onboarding junior software engineers onto projects.`,
-    `You are onboarding a junior software engineer and explaining to them the purpose of the ${doc.metadata.fileName} file.`,
-    `Here is the code:
+  try {
+    const code = doc.pageContent.slice(0, 10000);
+    const response = await model.generateContent([
+      `You are a intelligent senior software engineer who specialises in onboarding junior software engineers onto projects.`,
+      `You are onboarding a junior software engineer and explaining to them the purpose of the ${doc.metadata.fileName} file.`,
+      `Here is the code:
       ---
       ${code}
       ---
       Give me a summary in no more than 100 words of the code above.`,
-  ]);
-  return response.response.text();
+    ]);
+    return response.response.text();
+  } catch (error) {
+    return " ";
+  }
 }
 
 export async function generateEmbedding(summary: string) {

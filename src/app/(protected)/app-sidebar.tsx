@@ -26,7 +26,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import path from "path";
+import logo from "@/assets/logo.png";
+import title from "@/assets/title.png";
 
 const items = [
   {
@@ -61,9 +62,9 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" variant="floating">
       <SidebarHeader>
         <div className="flex items-center gap-2">
-          {/* <Image src="" alt="logo" width={40} height={40} /> */}
+          <Image src={logo} alt="gitwit-logo" width={40} height={40} />
           {open && (
-            <h1 className="text-primary/80 text-xl font-bold">GitWit</h1>
+            <Image src={title} alt="gitwit-logo" height={40} />
           )}
         </div>
       </SidebarHeader>

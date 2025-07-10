@@ -51,8 +51,7 @@ const DashboardPage = () => {
           <MeetingCard />
         </div>
       </div>
-      <div className="mt-8"></div>
-      <CommitLog />
+
     </div>
   );
 };

@@ -1,5 +1,4 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import {
   getDownloadURL,
   getStorage,
@@ -19,7 +18,14 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+
+if (typeof window !== "undefined") {
+  import("firebase/analytics").then(async ({ getAnalytics, isSupported }) => {
+    if (await isSupported()) {
+      const analytics = getAnalytics(app);
+    }
+  });
+}
 
 export const storage = getStorage(app);
 

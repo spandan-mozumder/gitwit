@@ -23,9 +23,9 @@ const MeetingsPage = () => {
 
   return (
     <>
-      <MeetingCard />
+      
       <div className="h-6"></div>
-      <h1 className="font-semibolf text-xl">Meetings</h1>
+      <h1 className="font-semibold text-xl">Meetings</h1>
       {meetings && meetings.length === 0 && <div>Ne meetings found</div>}
       {isLoading && <div>Loading...</div>}
       <ul className="divide-y divide-gray-200">

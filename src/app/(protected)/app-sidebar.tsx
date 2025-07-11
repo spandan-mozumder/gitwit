@@ -1,5 +1,11 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+
+import useProject from "@/hooks/use-project";
+
 import { Button } from "@/components/ui/button";
 import {
   Sidebar,
@@ -13,9 +19,7 @@ import {
   SidebarMenu,
   useSidebar,
 } from "@/components/ui/sidebar";
-import useProject from "@/hooks/use-project";
 import { cn } from "@/lib/utils";
-import { url } from "inspector";
 import {
   Bot,
   CreditCard,
@@ -23,33 +27,15 @@ import {
   Plus,
   Presentation,
 } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+
 import logo from "@/assets/logo.png";
 import title from "@/assets/title.png";
 
 const items = [
-  {
-    title: "Dashboard",
-    url: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Q&A",
-    url: "/qa",
-    icon: Bot,
-  },
-  {
-    title: "Meetings",
-    url: "/meetings",
-    icon: Presentation,
-  },
-  {
-    title: "Billing",
-    url: "/billing",
-    icon: CreditCard,
-  },
+  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Q&A", url: "/qa", icon: Bot },
+  { title: "Meetings", url: "/meetings", icon: Presentation },
+  { title: "Billing", url: "/billing", icon: CreditCard },
 ];
 
 export function AppSidebar() {
@@ -63,9 +49,7 @@ export function AppSidebar() {
       <SidebarHeader>
         <div className="flex items-center gap-2">
           <Image src={logo} alt="gitwit-logo" width={40} height={40} />
-          {open && (
-            <Image src={title} alt="gitwit-logo" height={40} />
-          )}
+          {open && <Image src={title} alt="gitwit-title" height={60} />}
         </div>
       </SidebarHeader>
 
@@ -74,23 +58,22 @@ export function AppSidebar() {
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => {
-                return (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <Link
-                        href={item.url}
-                        className={cn({
-                          "!bg-primary !text-white": pathname === item.url,
-                        })}
-                      >
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
+              {items.map((item) => (
+                <SidebarMenuItem key={item.url}>
+                  <SidebarMenuButton asChild>
+                    <Link
+                      href={item.url}
+                      aria-current={pathname === item.url ? "page" : undefined}
+                      className={cn({
+                        "!bg-primary !text-white": pathname === item.url,
+                      })}
+                    >
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -100,34 +83,36 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {projects?.map((project) => (
-                <SidebarMenuItem key={project.name}>
-                  <SidebarMenuButton asChild>
+                <SidebarMenuItem key={project.id}>
+                  <SidebarMenuButton
+                    onClick={() => {
+                      setProjectId(project.id);
+                      router.push("/dashboard");
+                    }}
+                    className="text-left"
+                  >
                     <div
-                      onClick={() => {
-                        setProjectId(project.id);
-                        router.push("/dashboard");
-                      }}
+                      className={cn(
+                        "text-primary flex size-6 items-center justify-center rounded-sm border bg-white text-sm",
+                        {
+                          "bg-primary text-white": project.id === projectId,
+                        },
+                      )}
                     >
-                      <div
-                        className={cn(
-                          "text-primary flex size-6 items-center justify-center rounded-sm border bg-white text-sm",
-                          { "bg-primary text-white": project.id === projectId },
-                        )}
-                      >
-                        {project.name[0]}
-                      </div>
-                      <span>{project.name}</span>
+                      {project.name?.[0]?.toUpperCase() ?? "?"}
                     </div>
+                    <span>{project.name}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-              <div className="h-2"></div>
+
+              <div className="h-2" />
 
               {open && (
                 <SidebarMenuItem>
                   <Link href="/create">
                     <Button size="sm" variant="outline" className="w-fit">
-                      <Plus />
+                      <Plus className="mr-1 h-4 w-4" />
                       Create Project
                     </Button>
                   </Link>

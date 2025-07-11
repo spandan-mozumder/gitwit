@@ -1,10 +1,10 @@
-import { initializeApp } from "firebase/app";
 import {
   getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import { initializeApp } from "firebase/app";
 import { set } from "date-fns";
 
 const firebaseConfig = {

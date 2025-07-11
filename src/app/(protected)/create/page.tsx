@@ -2,11 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import useRefetch from "@/hooks/use-refetch";
 import { api } from "@/trpc/react";
-import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import useRefetch from "@/hooks/use-refetch";
 
 type FormInput = {
   repoUrl: string;
@@ -42,7 +41,6 @@ const CreatePage = () => {
 
   return (
     <div className="flex h-full items-center justify-center gap-12">
-      {/* <Image src="/" alt="create-page-image" className="h-56 w-auto" /> */}
       <div>
         <div>
           <h1 className="text-2xl font-semibold">
@@ -52,35 +50,33 @@ const CreatePage = () => {
             Enter the URL of your repository to link it to GitWit
           </p>
 
-          <div className="h-4"></div>
+          <div className="h-4" />
 
-          <div>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Input
-                {...register("projectName", { required: true })}
-                placeholder="Project Name"
-                required
-              />
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Input
+              {...register("projectName", { required: true })}
+              placeholder="Project Name"
+              required
+            />
 
-              <div className="h-2"></div>
-              <Input
-                {...register("repoUrl", { required: true })}
-                placeholder="GitHub URL"
-                required
-              />
+            <div className="h-2" />
+            <Input
+              {...register("repoUrl", { required: true })}
+              placeholder="GitHub URL"
+              required
+            />
 
-              <div className="h-2"></div>
-              <Input
-                {...register("githubToken")}
-                placeholder="GitHub Token (optional)"
-              />
-              <div className="h-4"></div>
+            <div className="h-2" />
+            <Input
+              {...register("githubToken")}
+              placeholder="GitHub Token (optional)"
+            />
 
-              <Button type="submit" disabled={createProject.isPending}>
-                Create Project
-              </Button>
-            </form>
-          </div>
+            <div className="h-4" />
+            <Button type="submit" disabled={createProject.isPending}>
+              Create Project
+            </Button>
+          </form>
         </div>
       </div>
     </div>

@@ -9,49 +9,58 @@ import MeetingCard from "./meeting-card";
 import ArchiveButton from "./archive-button";
 import TeamMembers from "./team-members";
 import dynamic from "next/dynamic";
-const InviteButton = dynamic(() => import("./invite-button"), {
-  ssr: false,
-});
+
+const InviteButton = dynamic(() => import("./invite-button"), { ssr: false });
 
 const DashboardPage = () => {
-  const { project } = useProject();
+  const { selectedProject } = useProject();
+  const githubUrl = selectedProject?.githubUrl;
+
   return (
     <div>
+      {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-y-4">
-        {/* github link */}
+        {/* GitHub Link Box */}
         <div className="bg-primary w-fit rounded-md px-4 py-3">
           <div className="flex items-center">
             <Github className="size-5 text-white" />
-            <div className="ml-2">
-              <p className="text-sm font-medium text-white">
-                This project is linked to{" "}
+            <p className="ml-2 text-sm font-medium text-white">
+              This project is linked to{" "}
+              {githubUrl ? (
                 <Link
-                  href={project?.githubUrl ?? ""}
+                  href={githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center text-white/80 hover:underline"
                 >
-                  {project?.githubUrl}
+                  {githubUrl}
                   <ExternalLink className="ml-1 size-4" />
                 </Link>
-              </p>
-            </div>
+              ) : (
+                <span className="text-white/70 italic">
+                  No GitHub URL provided
+                </span>
+              )}
+            </p>
           </div>
         </div>
 
-        <div className="h-4"></div>
-
+        {/* Team + Actions */}
         <div className="flex items-center gap-4">
           <TeamMembers />
           <InviteButton />
           <ArchiveButton />
         </div>
       </div>
-      <div className="mt-4">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-5">
-          <AskQuestionCard />
-          <MeetingCard />
-        </div>
+
+      {/* Cards */}
+      <div className="my-6 grid grid-cols-1 gap-4 sm:grid-cols-5">
+        <AskQuestionCard />
+        <MeetingCard />
       </div>
 
+      {/* Commits */}
+      <CommitLog />
     </div>
   );
 };

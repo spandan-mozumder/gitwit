@@ -1,33 +1,48 @@
 "use client";
 
-import useProject from "@/hooks/use-project";
-import { api } from "@/trpc/react";
 import React from "react";
-import MeetingCard from "../dashboard/meeting-card";
 import Link from "next/link";
+
+import { api } from "@/trpc/react";
+import useProject from "@/hooks/use-project";
+import useRefetch from "@/hooks/use-refetch";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+
 import { toast } from "sonner";
-import useRefetch from "@/hooks/use-refetch";
+
+import MeetingCard from "../dashboard/meeting-card";
+
 
 const MeetingsPage = () => {
   const { projectId } = useProject();
   const { data: meetings, isLoading } = api.project.getMeetings.useQuery(
     { projectId },
-    {
-      refetchInterval: 4000,
-    },
+    { refetchInterval: 4000 },
   );
+
   const deleteMeeting = api.project.deleteMeeting.useMutation();
   const refetch = useRefetch();
 
+  const formatDate = (date: string | Date) =>
+    new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    }).format(new Date(date));
+
   return (
     <>
-      
-      <div className="h-6"></div>
-      <h1 className="font-semibold text-xl">Meetings</h1>
-      {meetings && meetings.length === 0 && <div>Ne meetings found</div>}
-      {isLoading && <div>Loading...</div>}
+      <MeetingCard />
+      <div className="h-6" />
+      <h1 className="text-xl font-semibold">Meetings</h1>
+
+      {isLoading && <div className="text-sm text-gray-500">Loading...</div>}
+      {!isLoading && meetings?.length === 0 && (
+        <div className="text-sm text-gray-500">No meetings found.</div>
+      )}
+
       <ul className="divide-y divide-gray-200">
         {meetings?.map((meeting) => (
           <li
@@ -39,7 +54,7 @@ const MeetingsPage = () => {
                 <div className="flex items-center gap-2">
                   <Link
                     href={`/meetings/${meeting.id}`}
-                    className="text-sm font-semibold"
+                    className="text-sm font-semibold hover:underline"
                   >
                     {meeting.name}
                   </Link>
@@ -52,11 +67,10 @@ const MeetingsPage = () => {
               </div>
 
               <div className="flex items-center gap-x-2 text-xs text-gray-500">
-                <p className="whitespace-npwrap">
-                  {meeting.createdAt.toLocaleDateString()}
+                <p className="whitespace-nowrap">
+                  {formatDate(meeting.createdAt)}
                 </p>
-
-                <p className="truncate">{meeting.issues.length} issues</p>
+                <p className="truncate">{meeting.issues?.length ?? 0} issues</p>
               </div>
             </div>
 
@@ -75,9 +89,13 @@ const MeetingsPage = () => {
                   deleteMeeting.mutate(
                     { meetingId: meeting.id },
                     {
-                      onSuccess: () => {
+                      onSuccess: async () => {
                         toast.success("Meeting deleted successfully!");
-                        refetch();
+                        await refetch();
+                      },
+                      onError: (err) => {
+                        toast.error("Failed to delete meeting");
+                        console.error(err);
                       },
                     },
                   )

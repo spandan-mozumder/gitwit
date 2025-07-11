@@ -1,7 +1,8 @@
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { db } from "@/server/db";
+
 import { notFound, redirect } from "next/navigation";
 
-import { db } from "@/server/db";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 const SyncUser = async () => {
   const { userId } = await auth();

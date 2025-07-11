@@ -1,5 +1,8 @@
 "use client";
 
+import React from "react";
+import Image from "next/image";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -9,21 +12,20 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import useProject from "@/hooks/use-project";
-import Image from "next/image";
-import React from "react";
-import logo from "@/assets/logo.png";
-import { askQuestion } from "./actions";
+
+import { toast } from "sonner";
 import { readStreamableValue } from "ai/rsc";
 import MDEditor from "@uiw/react-md-editor";
-import { serialize } from "v8";
-import CodeReferences from "./code-references";
-import { api } from "@/trpc/react";
-import { toast } from "sonner";
+
+import logo from "@/assets/logo.png";
+import useProject from "@/hooks/use-project";
 import useRefetch from "@/hooks/use-refetch";
+import CodeReferences from "./code-references";
+import { askQuestion } from "./actions";
+import { api } from "@/trpc/react";
 
 const AskQuestionCard = () => {
-  const { project } = useProject();
+  const { selectedProject } = useProject();
   const [question, setQuestion] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -32,26 +34,31 @@ const AskQuestionCard = () => {
   >([]);
   const [answer, setAnswer] = React.useState("");
   const saveAnswer = api.project.saveAnswer.useMutation();
+  const refetch = useRefetch();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!selectedProject?.id) return;
+
     setAnswer("");
     setFilesReferences([]);
-    e.preventDefault();
-    if (!project?.id) return;
     setLoading(true);
 
-    const { output, filesReferences } = await askQuestion(question, project.id);
+    const { output, filesReferences } = await askQuestion(
+      question,
+      selectedProject.id,
+    );
 
     setOpen(true);
-    setFilesReferences(
-      Array.isArray(filesReferences)
-        ? (filesReferences as {
-            fileName: string;
-            sourceCode: string;
-            summary: string;
-          }[])
-        : [],
-    );
+    if (Array.isArray(filesReferences)) {
+      setFilesReferences(
+        filesReferences as {
+          fileName: string;
+          sourceCode: string;
+          summary: string;
+        }[],
+      );
+    }
 
     for await (const delta of readStreamableValue(output)) {
       if (delta) {
@@ -62,25 +69,28 @@ const AskQuestionCard = () => {
     setLoading(false);
   };
 
-  const refetch = useRefetch();
-
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="sm:max-w-[80vw]">
+        <DialogContent
+          className="h-[95vh] max-h-none overflow-auto bg-white sm:max-w-[80vw]"
+          style={{
+            backgroundColor: "white",
+            color: "black",
+          }}
+        >
           <DialogHeader>
             <div className="flex items-center gap-2">
               <DialogTitle>
                 <Image src={logo} alt="GitWit Logo" width={50} height={50} />
               </DialogTitle>
-
               <Button
                 disabled={saveAnswer.isPending}
-                variant={"outline"}
+                variant="outline"
                 onClick={() => {
                   saveAnswer.mutate(
                     {
-                      projectId: project!.id,
+                      projectId: selectedProject!.id,
                       question,
                       answer,
                       filesReferences,
@@ -104,17 +114,12 @@ const AskQuestionCard = () => {
 
           <MDEditor.Markdown
             source={answer}
-            className="max-w[70vw] h-full max-h-[40vh] overflow-scroll"
+            className="text-black max-w[70vw] h-full max-h-[40vh] overflow-scroll rounded-md bg-white p-5"
           />
 
           <CodeReferences filesReferences={filesReferences} />
 
-          <Button
-            type="button"
-            onClick={() => {
-              setOpen(false);
-            }}
-          >
+          <Button type="button" onClick={() => setOpen(false)}>
             Close
           </Button>
         </DialogContent>
@@ -124,16 +129,15 @@ const AskQuestionCard = () => {
         <CardHeader>
           <CardTitle>Ask a question</CardTitle>
         </CardHeader>
-
         <CardContent>
           <form onSubmit={onSubmit}>
             <Textarea
-              placeholder="Which file should I edit to change the home page?"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
+              placeholder="Which file should I edit to change the home page?"
               className="h-24"
             />
-            <div className="h-4"></div>
+            <div className="h-4" />
             <Button type="submit" disabled={loading}>
               Ask GitWit!
             </Button>

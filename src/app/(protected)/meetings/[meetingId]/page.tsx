@@ -1,14 +1,15 @@
-import React from 'react'
+import React from "react";
 
 type Props = {
-    params: Promise<{ meetingId: string }>
-}
+  params: {
+    meetingId: string;
+  };
+};
 
-const MeetingDetailsPage = async ({ params }: Props) => {
-    const { meetingId } = await params
-  return (
-    <div>{meetingId}</div>
-  )
-}
+const MeetingDetailsPage = ({ params }: Props) => {
+  const { meetingId } = params;
 
-export default MeetingDetailsPage
+  return <div>{meetingId}</div>;
+};
+
+export default MeetingDetailsPage;

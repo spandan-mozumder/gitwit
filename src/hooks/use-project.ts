@@ -1,18 +1,29 @@
-"use client"
+"use client";
 
 import { api } from "@/trpc/react";
 import { useLocalStorage } from "usehooks-ts";
 
 const useProject = () => {
-  const { data: projects } = api.project.getProjects.useQuery();
-  const [projectId, setProjectId] = useLocalStorage("gitwit-projectId", " ");
-  const project = projects?.find((project) => project.id === projectId);
+  const {
+    data: projects,
+    isLoading,
+    error,
+  } = api.project.getProjects.useQuery();
+  const [projectId, setProjectId] = useLocalStorage("gitwit-projectId", "");
+
+  const selectedProject = projects?.find((project) => project.id === projectId);
+
+  if (process.env.NODE_ENV === "development") {
+    console.debug("🔧 useProject → projectId from localStorage:", projectId);
+  }
 
   return {
     projects,
-    project,
+    selectedProject,
     projectId,
     setProjectId,
+    isLoading,
+    error,
   };
 };
 

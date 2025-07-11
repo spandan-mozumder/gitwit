@@ -1,5 +1,7 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
 import { UserButton } from "@clerk/nextjs";
+
+import { SidebarProvider } from "@/components/ui/sidebar";
+
 import { AppSidebar } from "./app-sidebar";
 
 type Props = {

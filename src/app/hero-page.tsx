@@ -265,10 +265,12 @@ const GitWitHero = () => {
           </p>
 
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
-            <Button size="lg" className="px-8 py-4 text-lg">
-              <Play className="mr-2 h-5 w-5" />
-              Start Free Trial
-            </Button>
+            <Link href="/sign-up">
+              <Button size="lg" className="px-8 py-4 text-lg">
+                <Play className="mr-2 h-5 w-5" />
+                Start Free Trial
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

@@ -9,13 +9,10 @@ const useProject = () => {
     isLoading,
     error,
   } = api.project.getProjects.useQuery();
+
   const [projectId, setProjectId] = useLocalStorage("gitwit-projectId", "");
 
   const selectedProject = projects?.find((project) => project.id === projectId);
-
-  if (process.env.NODE_ENV === "development") {
-    console.debug("🔧 useProject → projectId from localStorage:", projectId);
-  }
 
   return {
     projects,

@@ -119,8 +119,10 @@ export const projectRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      console.log(">>> uploadMeeting called with input:", input);
+
       try {
-        return await ctx.db.meeting.create({
+        const result = await ctx.db.meeting.create({
           data: {
             meetingUrl: input.meetingUrl,
             projectId: input.projectId,
@@ -128,8 +130,11 @@ export const projectRouter = createTRPCRouter({
             status: "PROCESSING",
           },
         });
+
+        console.log(">>> uploadMeeting success:", result);
+        return result;
       } catch (error) {
-        console.error("Error uploading meeting:", error);
+        console.error("!!! Error uploading meeting:", error);
         throw new Error("Failed to upload meeting");
       }
     }),

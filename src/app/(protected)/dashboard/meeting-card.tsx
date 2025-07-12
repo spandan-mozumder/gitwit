@@ -36,11 +36,19 @@ const MeetingCard = () => {
       meetingId: string;
       projectId: string;
     }) => {
+      console.log("[processMeeting] Sending to /api/process-meeting", {
+        meetingUrl,
+        meetingId,
+        projectId,
+      });
+
       const response = await axios.post("/api/process-meeting", {
         meetingUrl,
         meetingId,
         projectId,
       });
+
+      console.log("[processMeeting] Response:", response.data);
       return response.data;
     },
   });
@@ -54,14 +62,25 @@ const MeetingCard = () => {
     multiple: false,
     maxSize: 50_000_000,
     onDrop: async (acceptedFiles) => {
-      if (!selectedProject) return;
+      console.log("[Dropzone] File dropped:", acceptedFiles);
+
+      if (!selectedProject) {
+        console.warn("[Dropzone] No selected project. Aborting.");
+        return;
+      }
 
       const file = acceptedFiles[0];
-      if (!file) return;
+      if (!file) {
+        console.warn("[Dropzone] No file found in acceptedFiles.");
+        return;
+      }
 
       setIsUploading(true);
+
       try {
+        console.log("[Upload] Uploading file to Firebase:", file.name);
         const downloadURL = (await uploadFile(file, setProgress)) as string;
+        console.log("[Upload] File uploaded. Download URL:", downloadURL);
 
         uploadMeeting.mutate(
           {
@@ -71,25 +90,33 @@ const MeetingCard = () => {
           },
           {
             onSuccess: async (meeting) => {
+              console.log("[uploadMeeting] Success:", meeting);
               toast.success("Meeting uploaded successfully!");
               router.push("/meetings");
 
-              await processMeeting.mutateAsync({
-                meetingUrl: downloadURL,
-                meetingId: meeting.id,
-                projectId: selectedProject.id,
-              });
+              try {
+                const result = await processMeeting.mutateAsync({
+                  meetingUrl: downloadURL,
+                  meetingId: meeting.id,
+                  projectId: selectedProject.id,
+                });
+                console.log("[processMeeting] Completed:", result);
+              } catch (err) {
+                console.error("[processMeeting] Error:", err);
+              }
             },
-            onError: () => {
+            onError: (error) => {
+              console.error("[uploadMeeting] Error:", error);
               toast.error("Failed to upload meeting. Please try again.");
             },
             onSettled: () => {
+              console.log("[uploadMeeting] Settled");
               setIsUploading(false);
             },
           },
         );
       } catch (err) {
-        console.error(err);
+        console.error("[Upload] Unexpected error during upload:", err);
         toast.error("An unexpected error occurred during upload.");
         setIsUploading(false);
       }

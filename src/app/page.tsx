@@ -2,6 +2,6 @@
 
 import GitWitHero from "./hero-page";
 
-export default async function Home() {
+export default function Home() {
   return <GitWitHero />;
 }

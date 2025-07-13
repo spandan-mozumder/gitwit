@@ -5,27 +5,19 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { initializeApp } from "firebase/app";
-import { set } from "date-fns";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDo-c8MR_4C9-4w5Cfi6GGcT6AJGM4u_rI",
-  authDomain: "gitwit-15d76.firebaseapp.com",
-  projectId: "gitwit-15d76",
-  storageBucket: "gitwit-15d76.firebasestorage.app",
-  messagingSenderId: "88481637742",
-  appId: "1:88481637742:web:21e83e96b46d7cd5558d7f",
-  measurementId: "G-F1RY35QX2K",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-const app = initializeApp(firebaseConfig);
 
-if (typeof window !== "undefined") {
-  import("firebase/analytics").then(async ({ getAnalytics, isSupported }) => {
-    if (await isSupported()) {
-      const analytics = getAnalytics(app);
-    }
-  });
-}
+const app = initializeApp(firebaseConfig)
 
 export const storage = getStorage(app);
 

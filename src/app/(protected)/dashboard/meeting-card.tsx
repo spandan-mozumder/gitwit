@@ -62,26 +62,22 @@ const MeetingCard = () => {
     multiple: false,
     maxSize: 50_000_000,
     onDrop: async (acceptedFiles) => {
-      console.log("[Dropzone] File dropped:", acceptedFiles);
-
       if (!selectedProject) {
-        console.warn("[Dropzone] No selected project. Aborting.");
+        console.warn("No selected project. Aborting.");
         return;
       }
 
       const file = acceptedFiles[0];
       if (!file) {
-        console.warn("[Dropzone] No file found in acceptedFiles.");
+        console.warn("No file uploaded.");
         return;
       }
 
       setIsUploading(true);
 
       try {
-        console.log("[Upload] Uploading file to Firebase:", file.name);
         const downloadURL = (await uploadFile(file, setProgress)) as string;
-        console.log("[Upload] File uploaded. Download URL:", downloadURL);
-
+        
         uploadMeeting.mutate(
           {
             projectId: selectedProject.id,
@@ -90,34 +86,31 @@ const MeetingCard = () => {
           },
           {
             onSuccess: async (meeting) => {
-              console.log("[uploadMeeting] Success:", meeting);
               toast.success("Meeting uploaded successfully!");
-              router.push("/meetings");
-
               try {
                 const result = await processMeeting.mutateAsync({
                   meetingUrl: downloadURL,
                   meetingId: meeting.id,
                   projectId: selectedProject.id,
                 });
-                console.log("[processMeeting] Completed:", result);
               } catch (err) {
-                console.error("[processMeeting] Error:", err);
+                toast.error(
+                  `Error: ${err instanceof Error ? err.message : String(err)}`,
+                );
               }
             },
             onError: (error) => {
-              console.error("[uploadMeeting] Error:", error);
               toast.error("Failed to upload meeting. Please try again.");
             },
             onSettled: () => {
-              console.log("[uploadMeeting] Settled");
               setIsUploading(false);
             },
           },
         );
       } catch (err) {
-        console.error("[Upload] Unexpected error during upload:", err);
-        toast.error("An unexpected error occurred during upload.");
+        toast.error(
+          `Upload failed: ${err instanceof Error ? err.message : String(err)}`,
+        );
         setIsUploading(false);
       }
     },
@@ -140,7 +133,13 @@ const MeetingCard = () => {
             Powered by AI
           </p>
           <div className="mt-4">
-            <Button onClick={open}>
+            <Button
+              onClick={(e) => {
+                console.log("Upload button clicked");
+                e.stopPropagation();
+                open();
+              }}
+            >
               <Upload className="h-5 w-5" aria-hidden="true" />
               Upload Meeting
             </Button>

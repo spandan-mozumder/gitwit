@@ -119,7 +119,6 @@ export const projectRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      console.log(">>> uploadMeeting called with input:", input);
 
       try {
         const result = await ctx.db.meeting.create({
@@ -131,7 +130,6 @@ export const projectRouter = createTRPCRouter({
           },
         });
 
-        console.log(">>> uploadMeeting success:", result);
         return result;
       } catch (error) {
         console.error("!!! Error uploading meeting:", error);

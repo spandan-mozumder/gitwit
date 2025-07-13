@@ -3,10 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-
-import useProject from "@/hooks/use-project";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+
+import useProject from "@/hooks/use-project";
 import {
   Sidebar,
   SidebarContent,
@@ -19,11 +21,13 @@ import {
   SidebarMenu,
   useSidebar,
 } from "@/components/ui/sidebar";
+
 import { cn } from "@/lib/utils";
 import {
   Bot,
   CreditCard,
   LayoutDashboard,
+  Menu,
   Plus,
   Presentation,
 } from "lucide-react";
@@ -44,8 +48,10 @@ export function AppSidebar() {
   const { projects, projectId, setProjectId } = useProject();
   const router = useRouter();
 
-  return (
-    <Sidebar collapsible="icon" variant="floating">
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const sidebarContent = (
+    <>
       <SidebarHeader>
         <div className="flex items-center gap-2">
           <Image src={logo} alt="gitwit-logo" width={40} height={40} />
@@ -67,6 +73,7 @@ export function AppSidebar() {
                       className={cn({
                         "!bg-primary !text-white": pathname === item.url,
                       })}
+                      onClick={() => setMobileOpen(false)}
                     >
                       <item.icon />
                       <span>{item.title}</span>
@@ -88,6 +95,7 @@ export function AppSidebar() {
                     onClick={() => {
                       setProjectId(project.id);
                       router.push("/dashboard");
+                      setMobileOpen(false);
                     }}
                     className="text-left"
                   >
@@ -110,7 +118,7 @@ export function AppSidebar() {
 
               {open && (
                 <SidebarMenuItem>
-                  <Link href="/create">
+                  <Link href="/create" onClick={() => setMobileOpen(false)}>
                     <Button size="sm" variant="outline" className="w-fit">
                       <Plus className="mr-1 h-4 w-4" />
                       Create Project
@@ -122,6 +130,30 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-    </Sidebar>
+    </>
+  );
+
+  return (
+    <>
+      <div className="absolute p-2 md:hidden">
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <SheetTrigger asChild>
+            <Button size="icon" variant="secondary" className="mt-1 ml-2 border">
+              <Menu />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-64 p-0">
+            <SheetTitle></SheetTitle>
+            {sidebarContent}
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      <div className="hidden md:block">
+        <Sidebar collapsible="icon" variant="floating">
+          {sidebarContent}
+        </Sidebar>
+      </div>
+    </>
   );
 }

@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
         gist: summary.gist,
         headline: summary.headline,
         summary: summary.summary,
+        projectId,
         meetingId,
       })),
     });

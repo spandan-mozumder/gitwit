@@ -9,26 +9,13 @@ const client = new AssemblyAI({ apiKey: process.env.ASSEMBLYAI_API_KEY });
 function formatTime(ms: number): string {
   const seconds = Math.floor(ms / 1000);
   const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
+  const remainingSeconds = Math.floor(seconds % 60);
   return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
     .toString()
     .padStart(2, "0")}`;
 }
 
-type ProcessedMeeting = {
-  transcript: Awaited<ReturnType<typeof client.transcripts.transcribe>>;
-  summaries: {
-    start: string;
-    end: string;
-    gist: string;
-    headline: string;
-    summary: string;
-  }[];
-};
-
-export const processMeeting = async (
-  meetingUrl: string,
-): Promise<ProcessedMeeting> => {
+export const processMeeting = async (meetingUrl: string) => {
   try {
     const transcript = await client.transcripts.transcribe({
       audio: meetingUrl,
@@ -40,7 +27,7 @@ export const processMeeting = async (
     }
 
     const summaries =
-      transcript.chapters?.map((chapter) => ({
+      transcript.chapters?.map(chapter => ({
         start: formatTime(chapter.start),
         end: formatTime(chapter.end),
         gist: chapter.gist,

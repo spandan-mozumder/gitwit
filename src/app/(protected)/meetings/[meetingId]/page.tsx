@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import IssuesList from "./issues-list";
 
 type Props = {
   params: {
@@ -6,10 +9,10 @@ type Props = {
   };
 };
 
-const MeetingDetailsPage = ({ params }: Props) => {
-  const { meetingId } = params;
+const MeetingDetailsPage = async ({ params }: Props) => {
+  const { meetingId } = await params;
 
-  return <div>{meetingId}</div>;
+  return <IssuesList meetingId={meetingId} />;
 };
 
 export default MeetingDetailsPage;

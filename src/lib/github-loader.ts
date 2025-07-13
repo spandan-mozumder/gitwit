@@ -3,7 +3,6 @@ import { generateEmbedding, summariseCode } from "./gemini";
 import { Document } from "@langchain/core/documents";
 import { GithubRepoLoader } from "@langchain/community/document_loaders/web/github";
 
-
 const IGNORED_LOCK_FILES = [
   "package-lock.json",
   "yarn.lock",

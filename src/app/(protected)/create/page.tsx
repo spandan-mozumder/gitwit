@@ -6,7 +6,7 @@ import useRefetch from "@/hooks/use-refetch";
 import { api } from "@/trpc/react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import dashboard from "@/assets/dashboard.png"
+import dashboard from "@/assets/dashboard.png";
 import Image from "next/image";
 
 type FormInput = {
@@ -43,7 +43,11 @@ const CreatePage = () => {
 
   return (
     <div className="flex h-full items-center justify-center gap-12">
-      <Image src={dashboard} alt="Dashboard" className="w-[20rem] border-white shadow-sm shadow-secondary" />
+      <Image
+        src={dashboard}
+        alt="Dashboard"
+        className="shadow-secondary w-[20rem] border-white shadow-sm"
+      />
       <div>
         <div>
           <h1 className="text-2xl font-semibold">

@@ -9,8 +9,7 @@ export const env = createEnv({
       .default("development"),
   },
 
-  client: {
-  },
+  client: {},
 
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,

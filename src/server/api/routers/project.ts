@@ -119,7 +119,6 @@ export const projectRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-
       try {
         const result = await ctx.db.meeting.create({
           data: {

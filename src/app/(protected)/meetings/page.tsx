@@ -14,7 +14,6 @@ import { toast } from "sonner";
 
 import MeetingCard from "../dashboard/meeting-card";
 
-
 const MeetingsPage = () => {
   const { projectId } = useProject();
   const { data: meetings, isLoading } = api.project.getMeetings.useQuery(

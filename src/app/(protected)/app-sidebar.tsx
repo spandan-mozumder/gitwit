@@ -6,7 +6,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 import useProject from "@/hooks/use-project";
 import {
@@ -138,7 +143,11 @@ export function AppSidebar() {
       <div className="absolute p-2 md:hidden">
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger asChild>
-            <Button size="icon" variant="secondary" className="mt-1 ml-2 border">
+            <Button
+              size="icon"
+              variant="secondary"
+              className="mt-1 ml-2 border"
+            >
               <Menu />
             </Button>
           </SheetTrigger>

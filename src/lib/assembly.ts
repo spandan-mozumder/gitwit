@@ -27,7 +27,7 @@ export const processMeeting = async (meetingUrl: string) => {
     }
 
     const summaries =
-      transcript.chapters?.map(chapter => ({
+      transcript.chapters?.map((chapter) => ({
         start: formatTime(chapter.start),
         end: formatTime(chapter.end),
         gist: chapter.gist,

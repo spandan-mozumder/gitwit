@@ -77,7 +77,7 @@ const MeetingCard = () => {
 
       try {
         const downloadURL = (await uploadFile(file, setProgress)) as string;
-        
+
         uploadMeeting.mutate(
           {
             projectId: selectedProject.id,

@@ -114,7 +114,7 @@ const AskQuestionCard = () => {
 
           <MDEditor.Markdown
             source={answer}
-            className="text-black max-w[70vw] h-full max-h-[40vh] overflow-scroll rounded-md bg-white p-5"
+            className="max-w[70vw] h-full max-h-[40vh] overflow-scroll rounded-md bg-white p-5 text-black"
           />
 
           <CodeReferences filesReferences={filesReferences} />

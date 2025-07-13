@@ -20,7 +20,10 @@ const TeamMembers = () => {
       {members.map((member) => (
         <img
           key={member.id}
-          src={member.user.imageUrl || (typeof anonymous === "string" ? anonymous : anonymous.src)}
+          src={
+            member.user.imageUrl ||
+            (typeof anonymous === "string" ? anonymous : anonymous.src)
+          }
           alt={member.user.firstName || "User"}
           title={`${member.user.firstName ?? "Unknown"} ${member.user.lastName ?? ""}`}
           height={30}

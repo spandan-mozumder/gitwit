@@ -18,9 +18,7 @@ const DashboardPage = () => {
 
   return (
     <div>
-      {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-y-4">
-        {/* GitHub Link Box */}
         <div className="bg-primary w-fit rounded-md px-4 py-3">
           <div className="flex items-center">
             <Github className="size-5 text-white" />
@@ -45,7 +43,6 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        {/* Team + Actions */}
         <div className="flex items-center gap-4">
           <TeamMembers />
           <InviteButton />
@@ -53,13 +50,11 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {/* Cards */}
       <div className="my-6 grid grid-cols-1 gap-4 sm:grid-cols-5">
         <AskQuestionCard />
         <MeetingCard />
       </div>
 
-      {/* Commits */}
       <CommitLog />
     </div>
   );
